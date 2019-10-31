@@ -44,6 +44,8 @@ class: inverse
 
 ---
 
+
+
 class: inverse
 
 ## *2019-2020 Projects*
@@ -54,6 +56,12 @@ class: inverse
 4. Tweet Dashboard
 4. Maintenance
 5. Server deployment
+
+---
+
+class: inverse, center, middle
+
+# **Let's take a look at ser**
 
 ---
 
@@ -104,7 +112,7 @@ pr_finish()
 
 class: inverse, center, middle
 
-# **How to contribute**
+# **Example: updating the README**
 
 ---
 
@@ -112,14 +120,14 @@ class: inverse
 
 # *Workflow*
 
-1. Create your script (`ser::use_ser_script()`)
-2. Submit a pull request (`usethis::pr_*()`)
+1. Create your script (`use_ser_script()`)
+2. Submit a pull request (`pr_*()`)
 3. Malcolm reviews 
-4. Malcolm deploys (`ser::source_ser()`)
+4. Malcolm deploys (`source_ser()`)
 
 --
 
-## **I'll help you on any part of these!**
+### **I'll help you on any part of these!**
 
 ---
 
@@ -132,7 +140,7 @@ class: inverse, center, middle
 class: inverse, center, middle
 
 # **R Packages**
-## http://r-pkgs.had.co.nz/
+## [R Packages: The Book!](http://r-pkgs.had.co.nz/)
 
 
 ---
@@ -140,7 +148,8 @@ class: inverse, center, middle
 class: inverse, center, middle
 
 # **git and GitHub**
-## http://happygitwithr.com
+## [Happy git with R](http://happygitwithr.com)
+## [usethis PR Helpers vignette](https://usethis.r-lib.org/articles/articles/pr-functions.html)
 
 ---
 

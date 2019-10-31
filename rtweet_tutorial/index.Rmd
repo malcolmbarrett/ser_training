@@ -50,7 +50,15 @@ token <- create_token(
 
 --
 
-```{r}
+```{r, eval = FALSE}
+library(ser)
+# add tokens with usethis::edit_r_environ()
+ser_token()
+```
+
+--
+
+```{r, echo=FALSE}
 library(ser)
 # add tokens with usethis::edit_r_environ()
 ser_token()
@@ -115,12 +123,27 @@ mentioners
 
 # Most frequent mentioners
 
-```{r most_mentions, eval=FALSE}
-mentioners %>% 
+```{r most_mentions_prep}
+freq_mentioners <- mentioners %>% 
   count(screen_name) %>% 
   arrange(desc(n)) %>% 
-  head(18) %>% 
-  mutate(screen_name = paste0("@", screen_name)) %>% 
+  head(15) %>% 
+  mutate(screen_name = paste0("@", screen_name))
+```
+
+---
+
+# Most frequent mentioners
+
+```{r, echo=FALSE}
+freq_mentioners
+```
+
+---
+# Most frequent mentioners
+
+```{r most_mentions, eval=FALSE}
+freq_mentioners %>% 
   ggplot(aes(fct_rev(fct_inorder(screen_name)), n)) +
     geom_col(col = "white", fill = "#0072B2") +
     coord_flip() +
@@ -247,15 +270,20 @@ post_favorite("1025872214472544256", token = ser_token())
 post_follow("malco_barrett", token = ser_token())
 
 # send a direct message
-post_message("you can even send a private message", "malco_barrett", token = ser_token())
+post_message(
+  "you can even send a private message", 
+  user = "malco_barrett", 
+  token = ser_token()
+)
 ```
 
 ---
+
 class: inverse, center
 
-# rtweet vignettes
+# rtweet resources
 ## [Obtaining and using access tokens](https://rtweet.info/articles/auth.html)
 ## [Intro to rtweet: Collecting Twitter Data](https://rtweet.info/articles/intro.html)
 ## [Live streaming tweets](https://rtweet.info/articles/stream.html)
 
-## Soon to come: rtweet cheatsheet
+## [21 Recipes for Mining Twitter Data with rtweet](https://rud.is/books/21-recipes/)

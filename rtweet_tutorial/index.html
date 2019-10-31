@@ -18,7 +18,7 @@ class: center, middle, inverse, title-slide
 
 
 
-class: inverse-ns, center
+class: inverse, center
 
 # Getting started
 ## *Log in* to the SER Twitter account
@@ -59,6 +59,9 @@ library(ser)
 # add tokens with usethis::edit_r_environ()
 ser_token()
 ```
+
+--
+
 
 ```
 ## &lt;Token&gt;
@@ -123,7 +126,7 @@ ser_mentions %&gt;%
 
 # Get mentions
 
-&lt;img src="index_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -168,11 +171,45 @@ mentioners &lt;- lookup_tweets(
 
 
 ```r
-mentioners %&gt;% 
+freq_mentioners &lt;- mentioners %&gt;% 
   count(screen_name) %&gt;% 
   arrange(desc(n)) %&gt;% 
-  head(18) %&gt;% 
-  mutate(screen_name = paste0("@", screen_name)) %&gt;% 
+  head(15) %&gt;% 
+  mutate(screen_name = paste0("@", screen_name))
+```
+
+---
+
+# Most frequent mentioners
+
+
+```
+## # A tibble: 15 x 2
+##    screen_name          n
+##    &lt;chr&gt;            &lt;int&gt;
+##  1 @epipubs            10
+##  2 @JulieMOPetersen     6
+##  3 @ManlyEpic           5
+##  4 @Paula_Moraga_       5
+##  5 @AZPollack           4
+##  6 @diego_rojas84       4
+##  7 @GilmanStephenE      4
+##  8 @SarahBAndrea        4
+##  9 @sunnimum            4
+## 10 @WhitneyEpi          4
+## 11 @BrendisTrejo        3
+## 12 @Iplaywithgerms      3
+## 13 @lolo_remi           3
+## 14 @sandrogalea         3
+## 15 @Theresa_Chapple     3
+```
+
+---
+# Most frequent mentioners
+
+
+```r
+freq_mentioners %&gt;% 
   ggplot(aes(fct_rev(fct_inorder(screen_name)), n)) +
     geom_col(col = "white", fill = "#0072B2") +
     coord_flip() +
@@ -239,7 +276,7 @@ ser_tweets %&gt;%
 
 # Get SER tweets
 
-&lt;img src="index_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -315,18 +352,23 @@ post_favorite("1025872214472544256", token = ser_token())
 post_follow("malco_barrett", token = ser_token())
 
 # send a direct message
-post_message("you can even send a private message", "malco_barrett", token = ser_token())
+post_message(
+  "you can even send a private message", 
+  user = "malco_barrett", 
+  token = ser_token()
+)
 ```
 
 ---
+
 class: inverse, center
 
-# rtweet vignettes
+# rtweet resources
 ## [Obtaining and using access tokens](https://rtweet.info/articles/auth.html)
 ## [Intro to rtweet: Collecting Twitter Data](https://rtweet.info/articles/intro.html)
 ## [Live streaming tweets](https://rtweet.info/articles/stream.html)
 
-## Soon to come: rtweet cheatsheet
+## [21 Recipes for Mining Twitter Data with rtweet](https://rud.is/books/21-recipes/)
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
