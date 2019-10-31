@@ -1,0 +1,157 @@
+---
+title: "Introducing the ser R package"
+subtitle: "Projects, code, and contributing"
+output:
+  xaringan::moon_reader:
+    css: ["default", "theme.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE, tibble.max_extra_cols = 6, tibble.width = 60)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, fig.align = "center", dpi = 320)
+library(rtweet)
+```
+
+class: inverse, center, middle
+
+# **Find the package here:**
+## https://github.com/SERTwitter/ser
+
+---
+
+class: inverse
+
+# *Active Projects*
+
+1. Weekday autotweeting
+2. Daily email summary
+3. Pre-meeting tweets
+
+---
+
+class: inverse
+
+# *Helper tools*
+
+1. Emailing on error
+2. `ser_token()`
+3. `source_ser()`
+
+---
+
+class: inverse
+
+## *2019-2020 Projects*
+
+1. Tweeting junior researcher papers
+2. Calendar event tweets
+3. Improving email summaries
+4. Tweet Dashboard
+4. Maintenance
+5. Server deployment
+
+---
+
+class: inverse, center, middle
+
+# **How to contribute**
+
+---
+
+## Submit a **pull request**
+
+```{r, eval = FALSE}
+library(usethis)
+# download and open the package
+create_from_github("SERTwitter/ser")
+```
+
+--
+
+```{r, eval = FALSE}
+# Create a new branch and set up PR
+pr_init("branch_name")
+# [Work on your code]
+```
+
+--
+
+```{r, eval = FALSE}
+# Send your code to GitHub
+pr_push()
+```
+
+--
+
+```{r, eval = FALSE}
+# Get any changes from GitHub
+pr_pull()
+```
+
+--
+
+```{r, eval = FALSE}
+# Clean up
+pr_finish()
+```
+
+---
+
+class: inverse, center, middle
+
+# **How to contribute**
+
+---
+
+class: inverse
+
+# *Workflow*
+
+1. Create your script (`ser::use_ser_script()`)
+2. Submit a pull request (`usethis::pr_*()`)
+3. Malcolm reviews 
+4. Malcolm deploys (`ser::source_ser()`)
+
+--
+
+## **I'll help you on any part of these!**
+
+---
+
+class: inverse, center, middle
+
+# **There's a few things you'll need to know the basics about**
+
+---
+
+class: inverse, center, middle
+
+# **R Packages**
+## http://r-pkgs.had.co.nz/
+
+
+---
+
+class: inverse, center, middle
+
+# **git and GitHub**
+## http://happygitwithr.com
+
+---
+
+class: inverse
+
+## *2019-2020 Projects*
+
+1. Tweeting junior researcher papers
+2. Calendar event tweets
+3. Improving email summaries
+4. Tweet Dashboard
+4. Maintenance
+5. Server deployment
+

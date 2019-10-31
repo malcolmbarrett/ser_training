@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>Accessing Twitter Data</title>
+    <meta charset="utf-8" />
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="theme.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Accessing Twitter Data
+## with rtweet
+
+---
+
+
+
+
+class: inverse-ns, center
+
+# Getting started
+## *Log in* to the SER Twitter account
+
+## Install rtweet (if needed) and load
+
+
+```r
+install.packages("rtweet")
+library(rtweet)
+```
+
+---
+
+# Authenticate via browser
+## https://developer.twitter.com/en/apps
+
+
+```r
+token &lt;- create_token(
+  app = "tweet_tokens_ser",
+  consumer_key = "[CONSUMER KEY]",
+  consumer_secret = "[SECRET CONSUMER KEY]",
+  acess_token = "[SECRET ACCESS KEY]",
+  access_secret =  "[SECRET ACCESS KEY]"
+)
+```
+
+---
+
+# Use `ser_token()` instead
+
+--
+
+
+```r
+library(ser)
+# add tokens with usethis::edit_r_environ()
+ser_token()
+```
+
+```
+## &lt;Token&gt;
+## &lt;oauth_endpoint&gt;
+##  request:   https://api.twitter.com/oauth/request_token
+##  authorize: https://api.twitter.com/oauth/authenticate
+##  access:    https://api.twitter.com/oauth/access_token
+## &lt;oauth_app&gt; tweet_tokens_ser
+##   key:    Hlh5Oo8P4rJZuVTm4KBz6Wjl6
+##   secret: &lt;hidden&gt;
+## &lt;credentials&gt; oauth_token, oauth_token_secret
+## ---
+```
+
+---
+
+# Get mentions
+
+
+```r
+ser_mentions &lt;- get_mentions(token = ser_token())
+```
+
+---
+
+# Get mentions
+
+
+```
+## # A tibble: 196 x 19
+##    created_at          status_id text  truncated source
+##    &lt;dttm&gt;              &lt;chr&gt;     &lt;chr&gt; &lt;lgl&gt;     &lt;chr&gt; 
+##  1 2019-10-31 16:32:29 11899432… Infe… TRUE      "&lt;a h…
+##  2 2019-10-31 16:15:13 11899388… Do D… TRUE      "&lt;a h…
+##  3 2019-10-31 13:41:17 11899001… @sga… FALSE     "&lt;a h…
+##  4 2019-10-31 05:34:50 11897777… @DrR… TRUE      "&lt;a h…
+##  5 2019-10-31 02:00:10 11897237… @soc… TRUE      "&lt;a h…
+##  6 2019-10-30 18:45:20 11896142… "Ple… TRUE      "&lt;a h…
+##  7 2019-10-30 12:15:05 11895160… Infl… TRUE      "&lt;a h…
+##  8 2019-10-30 10:12:11 11894851… @soc… TRUE      "&lt;a h…
+##  9 2019-10-30 10:11:42 11894850… @soc… TRUE      "&lt;a h…
+## 10 2019-10-30 10:10:12 11894846… @soc… TRUE      "&lt;a h…
+## # … with 186 more rows, and 14 more variables:
+## #   status_in_reply_to_status_id &lt;chr&gt;,
+## #   status_in_reply_to_user_id &lt;chr&gt;,
+## #   in_reply_to_screen_name &lt;chr&gt;, geo &lt;lgl&gt;,
+## #   coordinates &lt;lgl&gt;, contributors &lt;lgl&gt;, …
+```
+
+---
+
+# Get mentions
+
+
+```r
+library(tidyverse)
+ser_mentions %&gt;% 
+  ts_plot()
+```
+
+---
+
+# Get mentions
+
+&lt;img src="index_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Most frequent mentioners
+
+
+```r
+mentioners &lt;- lookup_tweets(
+  ser_mentions$status_id, 
+  token = ser_token()
+)
+```
+
+---
+
+# Most frequent mentioners
+
+
+```
+## # A tibble: 196 x 90
+##    user_id status_id created_at          screen_name text 
+##    &lt;chr&gt;   &lt;chr&gt;     &lt;dttm&gt;              &lt;chr&gt;       &lt;chr&gt;
+##  1 209310… 11870249… 2019-10-23 15:16:14 Epi_D_Nique It’s…
+##  2 209310… 11874620… 2019-10-24 20:13:20 Epi_D_Nique @jen…
+##  3 296688… 11899388… 2019-10-31 16:15:13 epipubs     "Do …
+##  4 296688… 11877331… 2019-10-25 14:10:26 epipubs     How …
+##  5 296688… 11892281… 2019-10-29 17:10:57 epipubs     "It'…
+##  6 296688… 11877657… 2019-10-25 16:20:04 epipubs     "In …
+##  7 296688… 11851791… 2019-10-18 13:01:42 epipubs     "Dr.…
+##  8 296688… 11848166… 2019-10-17 13:01:25 epipubs     "In …
+##  9 296688… 11881281… 2019-10-26 16:20:04 epipubs     "Wha…
+## 10 296688… 11895160… 2019-10-30 12:15:05 epipubs     "Inf…
+## # … with 186 more rows, and 85 more variables:
+## #   source &lt;chr&gt;, display_text_width &lt;dbl&gt;,
+## #   reply_to_status_id &lt;chr&gt;, reply_to_user_id &lt;chr&gt;,
+## #   reply_to_screen_name &lt;chr&gt;, is_quote &lt;lgl&gt;, …
+```
+
+---
+
+# Most frequent mentioners
+
+
+```r
+mentioners %&gt;% 
+  count(screen_name) %&gt;% 
+  arrange(desc(n)) %&gt;% 
+  head(18) %&gt;% 
+  mutate(screen_name = paste0("@", screen_name)) %&gt;% 
+  ggplot(aes(fct_rev(fct_inorder(screen_name)), n)) +
+    geom_col(col = "white", fill = "#0072B2") +
+    coord_flip() +
+    theme_minimal(base_size = 14) + 
+    theme(panel.grid.major.y = element_blank(),
+          panel.grid.minor.y = element_blank(),
+          axis.title.y = element_blank()) +
+    ylab("mentions")
+```
+
+---
+
+&lt;img src="index_files/figure-html/most_mentions_out-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Get SER tweets
+
+
+```r
+ser_tweets &lt;- get_timeline(
+  "societyforepi", 
+  n = 1e5, 
+  token = ser_token()
+)
+```
+
+---
+
+# Get SER tweets
+
+
+```
+## # A tibble: 3,229 x 90
+##    user_id status_id created_at          screen_name text 
+##    &lt;chr&gt;   &lt;chr&gt;     &lt;dttm&gt;              &lt;chr&gt;       &lt;chr&gt;
+##  1 587813… 11899445… 2019-10-31 16:37:54 societyfor… "Do …
+##  2 587813… 11899426… 2019-10-31 16:30:09 societyfor… In N…
+##  3 587813… 11899280… 2019-10-31 15:32:16 societyfor… How …
+##  4 587813… 11898897… 2019-10-31 13:00:00 societyfor… "202…
+##  5 587813… 11895802… 2019-10-30 16:30:08 societyfor… #SER…
+##  6 587813… 11893156… 2019-10-29 22:58:34 societyfor… Conv…
+##  7 587813… 11893156… 2019-10-29 22:58:34 societyfor… Good…
+##  8 587813… 11893155… 2019-10-29 22:58:20 societyfor… Shou…
+##  9 587813… 11893155… 2019-10-29 22:58:20 societyfor… A 20…
+## 10 587813… 11893154… 2019-10-29 22:58:00 societyfor… Time…
+## # … with 3,219 more rows, and 85 more variables:
+## #   source &lt;chr&gt;, display_text_width &lt;dbl&gt;,
+## #   reply_to_status_id &lt;chr&gt;, reply_to_user_id &lt;chr&gt;,
+## #   reply_to_screen_name &lt;chr&gt;, is_quote &lt;lgl&gt;, …
+```
+
+---
+
+# Get SER tweets
+
+
+```r
+ser_tweets %&gt;% 
+  ts_plot()
+```
+
+---
+
+# Get SER tweets
+
+&lt;img src="index_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Most liked tweets
+
+
+```r
+library(ggrepel)
+ser_tweets %&gt;% 
+  arrange(desc(favorite_count)) %&gt;% 
+  head(100) %&gt;% 
+  mutate(id = 1:n(), label = ifelse(id %in% c(1:3, 6, 10), str_wrap(text), "")) %&gt;% 
+  arrange(favorite_count) %&gt;%
+  ggplot(aes(fct_inorder(status_id), favorite_count)) +
+    geom_jitter(col = "white", fill = "#0072B2", shape = 21, size = 2.5) +
+    geom_label_repel(aes(label = label), size = 2.5, force = 4, nudge_y = 3, point.padding = .5) +
+    theme_minimal(base_size = 14) +
+    theme(axis.text.x = element_blank(),
+          panel.grid.major.x = element_blank(),
+          panel.grid.minor.x = element_blank()) +
+    scale_y_continuous(breaks = seq(0, 150, 25)) +
+    labs(x = "tweet", y = "favorites")
+```
+
+---
+
+&lt;img src="index_files/figure-html/most_liked_tweets_out-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Most retweeted tweets
+
+
+```r
+library(ggrepel)
+ser_tweets %&gt;% 
+  arrange(desc(retweet_count)) %&gt;% 
+  filter(!is_retweet) %&gt;% 
+  head(100) %&gt;% 
+  mutate(id = 1:n(), label = ifelse(id %in% c(1:3, 6, 10), str_wrap(text), "")) %&gt;% 
+  arrange(retweet_count) %&gt;%
+  ggplot(aes(fct_inorder(status_id), retweet_count)) +
+    geom_jitter(col = "white", fill = "#0072B2", shape = 21, size = 2.5) +
+    geom_label_repel(aes(label = label), size = 2.5, force = 4, nudge_y = 3, point.padding = .5) +
+    theme_minimal(base_size = 14) +
+    theme(axis.text.x = element_blank(),
+          panel.grid.major.x = element_blank(),
+          panel.grid.minor.x = element_blank()) +
+    scale_x_discrete(expand = expand_scale(add = 1)) +
+    scale_y_continuous(breaks = seq(0, 150, 25)) +
+    labs(x = "tweet", y = "retweets") 
+```
+
+---
+
+&lt;img src="index_files/figure-html/most_rt_tweets_out-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Post, follow, retweet, etc.
+
+
+```r
+post_tweet("this is to post a tweet", token = ser_token())
+
+# retweet using status id
+post_tweet(retweet_id = "1025872214472544256", token = ser_token())
+
+# like using status id
+post_favorite("1025872214472544256", token = ser_token())
+
+# follow a user
+post_follow("malco_barrett", token = ser_token())
+
+# send a direct message
+post_message("you can even send a private message", "malco_barrett", token = ser_token())
+```
+
+---
+class: inverse, center
+
+# rtweet vignettes
+## [Obtaining and using access tokens](https://rtweet.info/articles/auth.html)
+## [Intro to rtweet: Collecting Twitter Data](https://rtweet.info/articles/intro.html)
+## [Live streaming tweets](https://rtweet.info/articles/stream.html)
+
+## Soon to come: rtweet cheatsheet
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

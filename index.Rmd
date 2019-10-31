@@ -1,0 +1,25 @@
+---
+output:
+  xaringan::moon_reader:
+    seal: false
+    css: ["default", "theme.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE, tibble.max_extra_cols = 6, tibble.width = 60)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, fig.align = "center", dpi = 320)
+library(rtweet)
+```
+
+class: inverse, center, middle
+
+## Topics:
+## [rtweet for working with twitter data](rtweet_tutorial/index.html)
+## [the ser package](ser_package//index.html)
+
+
